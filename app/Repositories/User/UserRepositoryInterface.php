@@ -6,7 +6,7 @@ use App\Repositories\RepositoryInterface;
 
 interface UserRepositoryInterface extends RepositoryInterface
 {
-    public function getUser();
+    // public function getUser();
 
-    public function getUserByEmail($email);
+    // public function getUserByEmail($email);
 }

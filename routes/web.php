@@ -17,7 +17,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::view("/{any}", "app")->where("any", ".*");
+Route::view('/category', 'category'); 
+Route::view('/product', 'product'); 
+Route::view('/add_category', 'add_category'); 
 
 
 Route::get('tasks', [TaskController::class, 'index'])->name('tasks.index');

@@ -4,10 +4,56 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
+use App\Repositories\Category\CategoryRepositoryInterface;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
+
+    protected $cateRepo;
+
+    public function __construct(CategoryRepositoryInterface $cateRepo)
+    {
+        $this->cateRepo = $cateRepo;
+    }
+
+    public function index()
+    {
+        // $categories = Category::all(); 
+        $categories = $this->cateRepo->getAll();
+        return response()->json($categories);
+    }
+
+    public function store(Request $request)
+    {
+        // return Category::create($request->all());
+        return $this->cateRepo->create($request->all());
+    }
+
+    public function show($id)
+    {
+        // return Category::findOrFail($id);
+        return $this->cateRepo->find($id);
+    }
+
+    public function update(Request $request, $id)
+    {
+        // $category = Category::findOrFail($id);
+        // $category->update($request->all());
+        $category = $this->cateRepo->find($id)->update($request->all());
+        return $category;
+    }
+
+    public function destroy($id)
+    {
+        // Category::findOrFail($id)->delete();
+        $this->cateRepo->find($id)->delete();
+        return 204;
+    }
+
+
+
+    
     // public function index()
     // {
     //     $categories = Category::all();
@@ -96,34 +142,4 @@ class CategoryController extends Controller
     //     return response()->json(['message' => 'Category deleted successfully']);
     // }
 
-
-
-    public function index()
-    {
-        $categories = Category::all(); 
-        return response()->json($categories);
-    }
-
-    public function store(Request $request)
-    {
-        return Category::create($request->all());
-    }
-
-    public function show($id)
-    {
-        return Category::findOrFail($id);
-    }
-
-    public function update(Request $request, $id)
-    {
-        $category = Category::findOrFail($id);
-        $category->update($request->all());
-        return $category;
-    }
-
-    public function destroy($id)
-    {
-        Category::findOrFail($id)->delete();
-        return 204;
-    }
 }

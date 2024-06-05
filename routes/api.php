@@ -30,3 +30,22 @@ Route::apiResource('products', ProductController::class);
 
 
 Route::apiResource('posts', PostController::class);
+
+
+
+Route::get('/products', [ProductController::class, 'index']);
+
+// Creating a new product
+Route::post('/products', [ProductController::class, 'store']);
+
+// Fetching a single product for editing
+Route::get('/products/{id}/edit', [ProductController::class, 'edit']);
+
+// Updating an existing product
+Route::put('/products/{id}', [ProductController::class, 'update']);
+
+// Deleting a product
+Route::delete('/products/{id}', [ProductController::class, 'destroy']);
+
+// Fetching categories
+Route::get('/categories', [CategoryController::class, 'index']);

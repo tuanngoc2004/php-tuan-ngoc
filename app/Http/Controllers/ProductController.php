@@ -6,9 +6,66 @@ use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Requests\ProductRequest;
+use App\Repositories\Product\ProductRepositoryInterface;
 
 class ProductController extends Controller
 {
+    protected $productRepository;
+
+    public function __construct(ProductRepositoryInterface $productRepository)
+    {
+        $this->productRepository = $productRepository;
+    }
+
+    public function index()
+    {
+        // $categories = Category::all();
+        // $products = Product::all();
+        // return response()->json(['products'=>$products, 'categories'=>$categories]);
+             
+        // $products = Product::
+        //     join('categories', 'products.category_id', '=', 'categories.id')
+        //     ->select(
+        //         'products.*',
+        //         'categories.name as categories'
+        //     )->get();
+        $products = $this->productRepository->getAllWithCategories();
+        return response()->json($products); 
+    }
+    public function store(Request $request)
+    {
+        // $product = Product::create($request->all());
+        $product = $this->productRepository->create($request->all());
+        return response()->json($product);
+    }
+
+    public function edit($id)
+    {
+        // $product = Product::with('category')->findOrFail($id);
+        $product = $this->productRepository->find($id);
+        return response()->json($product);
+    }
+
+
+    public function update(Request $request, $id)
+    {
+        // $product = Product::findOrFail($id);
+        // $product->update($request->all());
+        // $product->load('category');
+        $product = $this->productRepository->update($id, $request->all());
+        return response()->json($product);
+    }
+
+    public function destroy($id)
+    {
+        // Product::findOrFail($id)->delete();
+        $this->productRepository->find($id)->delete($id);
+        // $result = $this->productRepository->delete($id);
+        // return $result ? response()->noContent() : response()->json(['error' => 'Product not found'], 404);
+        return 204;
+    }
+
+
     // public function index(Request $request)
     // {
     //     $query = Product::query();
@@ -111,47 +168,4 @@ class ProductController extends Controller
     //     Product::findOrFail($id)->delete();
     //     return response()->json(['message' => 'Product deleted successfully']);
     // }
-
-
-
-    public function index()
-    {
-        // $categories = Category::all();
-        // $products = Product::all();
-        // return response()->json(['products'=>$products, 'categories'=>$categories]);
-             
-        $products = Product::
-            join('categories', 'products.category_id', '=', 'categories.id')
-            ->select(
-                'products.*',
-                'categories.name as categories'
-            )->paginate();
-        return response()->json($products); 
-    }
-    public function store(Request $request)
-    {
-        $product = Product::create($request->all());
-        return response()->json($product);
-    }
-
-    public function edit($id)
-    {
-        $product = Product::with('category')->findOrFail($id);
-        return response()->json($product);
-    }
-
-
-    public function update(Request $request, $id)
-    {
-        $product = Product::findOrFail($id);
-        $product->update($request->all());
-        $product->load('category');
-        return response()->json($product);
-    }
-
-    public function destroy($id)
-    {
-        Product::findOrFail($id)->delete();
-        return 204;
-    }
 }
